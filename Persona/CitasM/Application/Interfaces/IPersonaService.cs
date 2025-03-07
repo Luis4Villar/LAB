@@ -1,4 +1,5 @@
-﻿using Personas.Domain.Entities;
+﻿using Personas.Application.DTO;
+using Personas.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,9 @@ namespace Personas.Application.Interfaces
 {
     public interface IPersonaService
     {
-        List<Persona> GetAll();
-      
-        void AddPersona(Persona persona);
-        Task<Persona> GetPersonaId(int id);
-        Task UpdatePersona(Persona persona);
-        Task DeletePersona(int id);
+        List<PersonaDto> GetAll();
+
+        void AddPersona(PersonaDto persona);
+
     }
 }

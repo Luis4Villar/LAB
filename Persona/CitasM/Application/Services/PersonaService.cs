@@ -1,50 +1,38 @@
-﻿using Personas.Application.Interfaces;
+﻿using AutoMapper;
+using Personas.Application.DTO;
+using Personas.Application.Interfaces;
+using Personas.Application.Services;
 using Personas.Domain.Entities;
 using Personas.Domain.Interfaces;
-using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Personas.Application.Services
+namespace Personas.infrastructure.Repository
 {
-
-    public class PersonaService : IPersonaService
+	public class PersonaService:IPersonaService
     {
-        private readonly IPersonaRepository personaRepository;
+       
 
-        public PersonaService(IPersonaRepository personaRepository)
-        {
+        private IPersonaRepository personaRepository;
+        private readonly IMapper _mapper;
+
+        public PersonaService( IPersonaRepository personaRepository, IMapper mapper)
+		{
             this.personaRepository = personaRepository;
-        }
+            this._mapper = mapper;
 
-        public List<Persona> GetAll()
-        {
-            return  personaRepository.getAll();
         }
-        public void AddPersona(Persona persona)
-        {
-            personaRepository.Add(persona);
+		public List<PersonaDto> GetAll()
+		{
+            return _mapper.Map<List<PersonaDto>>(personaRepository.GetAll());
         }
-        public async Task<Persona> GetPesonaId(int id)
+        public void AddPersona(PersonaDto addPersona)
         {
-            return await personaRepository.GetPersonaId(id);
-        }
-        public async Task<Persona> GetPersonaId(int id)
-        {
-            return await personaRepository.GetPersonaId(id);
-        }
-        public async Task UpdatePersona(Persona persona)
-        {
-            await personaRepository.UpdatePersona(persona);
-        }
-
-        public async Task DeletePersona(int id)
-        {
-            await personaRepository.DeletePersona(id);
+            personaRepository.AddPersona(_mapper.Map<Persona>(addPersona));           
         }
     }
-
 }

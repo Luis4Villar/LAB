@@ -9,10 +9,11 @@ namespace Personas.Domain.Interfaces
 {
     public interface IPersonaRepository
     {
-         List<Persona> getAll();
-        void Add(Persona addCitas);
-        Task<Persona> GetPersonaId(int id);
-        Task UpdatePersona(Persona persona);
-        Task DeletePersona(int id);
+         List<Persona> GetAll();
+        Task<Persona> GetByDocumentoAsync(int Identificacion);
+        Task<List<Persona>> GetList();
+        Task AddPersona(Persona addCitas);
+        Task<bool> UpdatePerson(Persona addCitas);
+
     }
 }

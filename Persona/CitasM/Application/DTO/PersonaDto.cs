@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Personas.Domain.Entities
+namespace Personas.Application.DTO
 {
-	public class Persona
+	public class PersonaDto
 	{
-        [Key]
-		public int IdPaciente { get; set; }
+        public int IdPaciente { get; set; }
         public string TipoIdentificacion { get; set; }
         public int Identificacion { get; set; }
         public string Nombres { get; set; }

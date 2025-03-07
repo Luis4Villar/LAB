@@ -1,58 +1,56 @@
-﻿using Personas.Domain.Entities;
+﻿using Personas.Application.Interfaces;
+using Personas.Domain.Entities;
 using Personas.Domain.Interfaces;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Personas.infrastructure.Repository;
+using System.Data.Entity;
+using System.Runtime.Remoting.Contexts;
 
-namespace Personas.infrastructure.Repository
+namespace Personas.Application.Services
 {
-	public class PersonaRepository : IPersonaRepository
+
+    public class PersonaRepository : IPersonaRepository
     {
-        private readonly PersonaContext personacontext;
+        private readonly PersonaContext _context;
 
-        public PersonaRepository(PersonaContext personacontext)
-		{
-			this.personacontext = personacontext;
-
-        }
-		public List<Persona> getAll()
-		{
-			return personacontext.Persona.ToList();
-		}
-        public void Add(Persona addPersona)
+        public PersonaRepository(PersonaContext context)  // ✅ Correcto
         {
-            personacontext.Persona.Add(addPersona);
-            personacontext.SaveChanges();
-        }
-        public async Task<Persona> GetPersonaId(int id)
-        {
-            return await personacontext.Persona.FirstOrDefaultAsync(c => c.Identificacion == id);
-        }
-        public async Task UpdatePersona(Persona persona)
-        {
-            var citasExitente = await GetPersonaId(persona.Identificacion);
-            if (citasExitente != null)
-            {
-                citasExitente.TipoIdentificacion = persona.TipoIdentificacion;
-                citasExitente.Identificacion = persona.Identificacion;
-                citasExitente.Nombres = persona.Nombres;
-                citasExitente.Apellidos = persona.Apellidos;
-              
-                await personacontext.SaveChangesAsync();
-            }
+            _context = context;
         }
 
-
-        public async Task DeletePersona(int id)
+        public List<Persona> GetAll()
         {
-            var cita = await GetPersonaId(id);
-                        
-                personacontext.Persona.Remove(cita);
-                await personacontext.SaveChangesAsync();
-            
+            return _context.Persona.ToList();
+        }
+        public async Task<List<Persona>> GetList()
+        {
+            return await _context.Persona.ToListAsync();
+        }
+
+        public async Task<Persona> GetByDocumentoAsync(int Identificacion)
+        {
+            return await _context.Persona.FirstOrDefaultAsync(p => p.Identificacion == Identificacion);
+
+        }
+        public async Task AddPersona(Persona persona)
+        {
+            _context.Persona.Add(persona);
+            await _context.SaveChangesAsync();
+
+        }
+        public async Task<bool> UpdatePerson(Persona persona)
+        {
+
+            _context.Entry(persona).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return true;
+
         }
     }
-}
+    }
+    
